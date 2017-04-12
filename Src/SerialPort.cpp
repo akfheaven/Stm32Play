@@ -95,6 +95,7 @@ SerialPort* SerialPort::getSerialPort(SerialPort::Type PortType, uint32_t bauteR
             MX_USB_DEVICE_Init();
 
            portToMake->mType = TUSBVCP;
+           break;
         }
 
 
@@ -124,14 +125,14 @@ uint32_t SerialPort::getBauteTate(){
 
 SerialPort::State SerialPort::sendDate(char* date, uint8_t len){
     if(len > maxDateLen)return FAIL;
-    
+    memcpy(mTxBuffer, date, len);
     if(mType != TUSBVCP )
     {
-      if(HAL_UART_Transmit_DMA(&mUartHandle, (uint8_t*)date, len)!= HAL_OK){
+      if(HAL_UART_Transmit_DMA(&mUartHandle, mTxBuffer, len)!= HAL_OK){
         //Error_Handler();
         return FAIL;
       }
-    }else if(CDC_Transmit_FS((unsigned char*)date, len) != HAL_OK){
+    }else if(CDC_Transmit_FS(mTxBuffer, len) != HAL_OK){
         return FAIL;
     }
     return OK;

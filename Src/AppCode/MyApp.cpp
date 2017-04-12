@@ -12,13 +12,15 @@ void MyApp::OnSysStart(){
     configSystick(1000);
     
     serialPortUSB  = SerialPort::getSerialPort(SerialPort::TUSBVCP, 115200);
-    mySPortU2Listener = new MySPortListener();
+   
 
     serialPortU2  = SerialPort::getSerialPort(SerialPort::TUSART2, 115200);
   
-    
+    mySPortU2Listener = new MySPortListener(serialPortU2, serialPortUSB);
+    mySPortUsbListener = new MySPortListener(serialPortU2, serialPortUSB);
+     
     serialPortU2->addListener(mySPortU2Listener);
-    serialPortU2->addListener(mySPortU2Listener);
+    serialPortUSB->addListener(mySPortUsbListener);
     
 }
 

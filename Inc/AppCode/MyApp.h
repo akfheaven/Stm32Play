@@ -12,6 +12,7 @@ private :
   SerialPort* serialPortU2;
   SerialPort* serialPortUSB;
   MySPortListener* mySPortU2Listener;
+  MySPortListener* mySPortUsbListener;
   
 
 
