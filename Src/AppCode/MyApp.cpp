@@ -1,5 +1,7 @@
 #include "MyApp.h"
-
+#include "ESP8266.h"
+#include "MyESPListener.h"
+uint8_t isFirst =1;
 MyApp::MyApp()
 :serialPortU2(NULL)
 ,mySPortU2Listener(NULL)
@@ -21,7 +23,10 @@ void MyApp::OnSysStart(){
      
     serialPortU2->addListener(mySPortU2Listener);
     serialPortUSB->addListener(mySPortUsbListener);
-    
+
+    MyESPListener* espListener = new MyESPListener(serialPortUSB);
+    ESP8266* esp8266 = new ESP8266(SerialPort::TUSART2, espListener);
+    esp8266->start();
 }
 
 
@@ -42,12 +47,21 @@ void MyApp::onSysTick_IT(){
 
 
 void MyApp::onUserBtnDown(){
-    char* date = "BtnDown";
-    serialPortUSB->sendDate(date, strlen(date));
-    HAL_Delay(20);
+    
+    char* cmd = "AT+CIPSTART=\"TCP\",\"192.168.1.104\",8888\r\n\0";
+    if(isFirst == 1){
+      isFirst = 0;
+      serialPortU2->sendDate(cmd,strlen(cmd));
+      return ;
+    }
+    sprintf(cmdTemp, "AT+CIPSEND=%d\r\n\0", 5);
+    serialPortU2->sendDate(cmdTemp,strlen(cmdTemp));
+    //char* date = "BtnDown";
+    //serialPortUSB->sendDate(date, strlen(date));
+    //HAL_Delay(20);
 }
 void MyApp::onUserBtnUp(){
     char* date = "BtnUp";
-    serialPortU2->sendDate(date, strlen(date));
-    HAL_Delay(20);
+    //serialPortU2->sendDate(date, strlen(date));
+    //HAL_Delay(20);
 }

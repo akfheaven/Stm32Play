@@ -169,6 +169,8 @@ void SerialPort::IRQHandle(uint8_t isDMA, uint8_t isTx){
         UART_HandleTypeDef* uartHanle = &(curPort->mUartHandle);
         
         if(isDMA == 0){
+            HAL_UART_IRQHandler(uartHanle);
+            
             uint32_t temp;
             if((__HAL_UART_GET_FLAG(uartHanle,UART_FLAG_IDLE) != RESET))  
             {   
@@ -190,7 +192,7 @@ void SerialPort::IRQHandle(uint8_t isDMA, uint8_t isTx){
               
             }
 
-            HAL_UART_IRQHandler(uartHanle);
+            
             
         }else if(isTx == 1){
             HAL_DMA_IRQHandler(uartHanle->hdmatx);

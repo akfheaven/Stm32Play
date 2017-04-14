@@ -14,7 +14,7 @@ private :
   MySPortListener* mySPortU2Listener;
   MySPortListener* mySPortUsbListener;
   
-
+  char cmdTemp[50];
 
 //just implement and don't change
 private:
